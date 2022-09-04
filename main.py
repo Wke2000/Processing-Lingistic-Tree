@@ -1,3 +1,4 @@
+import  SyntaxCheck as SC
 class TreeNode:
     def __init__(self,tag,Function,Category,treenode,feature=None,leave=None,Next=None,kids=None,parent=None):
         self.tag=tag
@@ -11,6 +12,7 @@ class TreeNode:
         self.parent=parent
         self.kids=kids
         self.Next=Next
+
 
 def printTree(stree:TreeNode):
     Tree=stree
@@ -57,25 +59,35 @@ def finishTree(sTree:TreeNode):
     size=len(Tree)
     for i in range(size):
         for j in range(size-i-2,-1,-1):
-            if(Tree[j].tag+1==Tree[size-1-i].tag):
-                Tree[size-1-i].parent=Tree[j]
-                if(Tree[j].kids==None):
-                    Tree[j].kids=Tree[size-1-i]
-                    break
+            if(Tree[j].tag+1<=Tree[size-1-i].tag):
+                if(Tree[size-1-i].Function=='PUNC' and Tree[size-1-i].Category=='PUNC'):
+                    Tree[size - 1 - i].parent = Tree[j].parent
+                    L=Tree[j].Next
+                    Tree[j].Next=Tree[size - 1 - i]
+                    Tree[size - 1 - i].Next=L
                 else:
-                        L=Tree[j].kids
+                    Tree[size-1-i].parent=Tree[j]
+                    if(Tree[j].kids==None):
                         Tree[j].kids=Tree[size-1-i]
-                        Tree[j].kids.Next=L
                         break
+                    else:
+                            L=Tree[j].kids
+                            Tree[j].kids=Tree[size-1-i]
+                            Tree[j].kids.Next=L
+                            break
 
 
 def  main(address:str):
     f = open(address)
     line = f.readline()
+    if(line=='\n'):
+        print(1)
     Tree=[]
     AllTree=[]
+    ErrorDict = []
+    LineNumber=1
     while line:
-        if('<#w2c-' in line ):
+        if('<#' in line ):
             if(len(Tree)!=0):
                 finishTree(Tree)
                 AllTree.append(Tree)
@@ -85,36 +97,49 @@ def  main(address:str):
                 print('*'*50)
                 while(len(Tree)!=0):
                     Tree.pop()
-        elif('<#w2c-' not in line ):
-            tmp=line.split(' ')
+        elif('<#' not in line and line!='\n' ):
+            TmpLine=line
+            tmp=TmpLine.split(' ')
             tag=0
             for i in tmp:
                 if(i==''):
                     tag=tag+1
                 else:
                     break
-            tmp=line.split()
-            if(tmp==[]):
-                line = f.readline()
-                continue
-            tmp1=tmp[1].split('(')[0]
-            if('(' in line):
-                tmp2=tmp[1].split('(')[1].split(')')[0]
+            islegal=SC.isSyntax(TmpLine)
+            if(islegal<0):
+                if(islegal==-1):
+                    ErrorDict.append([LineNumber,-1,line])
+                    TmpLine=' '*tag+SC.AlternateNodes_1
+                elif (islegal == -2):
+                    ErrorDict.append([LineNumber, -2, line])
+                    TmpLine = ' '*tag+SC.AlternateNodes_2
+                elif (islegal == -3):
+                    ErrorDict.append([LineNumber, -3, line])
+                    TmpLine = ' '*tag+SC.AlternateNodes_3
+            tmp=TmpLine.split()
+            NodeFuction=tmp[0]
+            NodeCategory=tmp[1].split('(')[0]
+            NodeTreeNode=TmpLine.split('\n')[0]
+            NodeFeature=tmp[1].split('(')[1].split(')')[0]
+            if (len(NodeFeature) == 0):
+                NodeFeature = None
             else:
-                tmp2=''
-            tmp3=None
-            if(len(tmp)>2):
-                tmp3=line.split('{')[1].split('}')[0]
-            if(len(tmp2)>0):
-                tmp2=tmp2.split(',')
-                ans=TreeNode(tag=tag,Function=tmp[0],Category=tmp1,treenode=line.split('\n')[0],feature=tmp2,leave=tmp3)
+                NodeFeature = NodeFeature.split(',')
+            if('{' in line):
+                NodeLeaves= TmpLine.split('{')[1].split('}')[0]
             else:
-                ans=TreeNode(tag=tag,Function=tmp[0],Category=tmp1,treenode=line.split('\n')[0],leave=tmp3)
+                NodeLeaves=None
 
+            ans=TreeNode(tag,NodeFuction,NodeCategory,NodeTreeNode,NodeFeature,NodeLeaves)
             Tree.append(ans)
         line = f.readline()
+        LineNumber=LineNumber+1
     f.close()
+    print('These line may have problem\n')
+    for i in ErrorDict:
+        print(i[0],i[1],i[2])
 
 if __name__ == '__main__':
-    FileAddress="C://Users//86153//Desktop//w2c-001.syn"
+    FileAddress="C://Users//86153//Desktop//tree-cnn-202112.syn"
     main(FileAddress)
