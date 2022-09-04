@@ -1,7 +1,7 @@
 # How to use
 User need to change the FileAddress in your personal computer
 
-# Main Function Introduction
+# Main.py Introduction
 1 finishTree() is a function which is used to Constructing a multi-tree with the generated nodes through traversing from back to front
 
 2 printTree() is a function to print the Syntax tree and its attribute
@@ -10,7 +10,7 @@ User need to change the FileAddress in your personal computer
 
 4 main() is a function which read the file and generated nodes
 
-# SyntaxCheck Function Introduction
+# SyntaxCheck.py Introduction
 1 isFunction() is a fuction check the Fuction is legal
 
 2 isCatergory() is a fuction check the Catergory is legal
