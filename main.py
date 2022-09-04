@@ -60,21 +60,15 @@ def finishTree(sTree:TreeNode):
     for i in range(size):
         for j in range(size-i-2,-1,-1):
             if(Tree[j].tag+1<=Tree[size-1-i].tag):
-                if(Tree[size-1-i].Function=='PUNC' and Tree[size-1-i].Category=='PUNC'):
-                    Tree[size - 1 - i].parent = Tree[j].parent
-                    L=Tree[j].Next
-                    Tree[j].Next=Tree[size - 1 - i]
-                    Tree[size - 1 - i].Next=L
+                Tree[size - 1 - i].parent = Tree[j]
+                if (Tree[j].kids == None):
+                    Tree[j].kids = Tree[size - 1 - i]
+                    break
                 else:
-                    Tree[size-1-i].parent=Tree[j]
-                    if(Tree[j].kids==None):
-                        Tree[j].kids=Tree[size-1-i]
-                        break
-                    else:
-                            L=Tree[j].kids
-                            Tree[j].kids=Tree[size-1-i]
-                            Tree[j].kids.Next=L
-                            break
+                    L = Tree[j].kids
+                    Tree[j].kids = Tree[size - 1 - i]
+                    Tree[j].kids.Next = L
+                    break
 
 
 def  main(address:str):
@@ -136,10 +130,11 @@ def  main(address:str):
         line = f.readline()
         LineNumber=LineNumber+1
     f.close()
-    print('These line may have problem\n')
-    for i in ErrorDict:
-        print(i[0],i[1],i[2])
+    if(len(ErrorDict)!=0):
+        print('These line may have problem\n')
+        for i in ErrorDict:
+            print(i[0],i[1],i[2])
 
 if __name__ == '__main__':
-    FileAddress="C://Users//86153//Desktop//tree-cnn-202112.syn"
+    FileAddress='test.txt'
     main(FileAddress)
