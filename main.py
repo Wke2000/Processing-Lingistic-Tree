@@ -195,5 +195,5 @@ def  main(address:str):
 
 
 if __name__ == '__main__':
-    FileAddress="test.txt"
+    FileAddress="C://Users//86153//Desktop//tree-cnn-202201.syn"
     main(FileAddress)
