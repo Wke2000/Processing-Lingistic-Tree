@@ -12,7 +12,7 @@ def isFunction(node_split:str)->bool:
 def isCatergory(node_split:str)->bool:
     ns=node_split
     tmp=ns.split('(')
-    if(len(tmp[1])==0 or tmp[1][-1]!=')'):
+    if(len(tmp)==1 or tmp[1][-1]!=')'):
         return False
     for i in tmp[0]:
         if(str.isalnum(i)  ):
@@ -26,34 +26,24 @@ def isCatergory(node_split:str)->bool:
             return False
     return True
 
-def isLeaves(node_split:str)->bool: #{}
-    ns=node_split
-    length=len(ns)
-    punc = string.punctuation
-    punc=punc+'”“！？｡＂＃＄％＆＇（）＊＋，－／：；＜＝＞＠［＼］＾＿｀｛｜｝～｟｠｢｣､、〃》「」『』【】〔〕〖〗〘〙〚〛〜〝〞〟〰〾〿–—‘’‛“”„‟…‧﹏.'
-    if(ns[0]!='{' or ns[length-1]!='}'):
-        return False
-    for i in range(1,length):
-        if(ns[i] in punc or str.isalnum(ns[i]) or ns[i]==' '):
-            continue
-        else:
-            return False
-    return True
+
 
 
 def isSyntax(node:str)->int:
     s=node.split('\n')[0]
     tmp=s.split()
     tmp1=tmp[0]
-    tmp2=tmp[1]
-    if('{'in s ):
-        tmp3='{'+s.split('{')[1]
-        if (isLeaves(tmp3) == False):
-            return -3
+    tmp2='SubstituteCategory'
+    if(len(tmp)>1):
+        tmp2=tmp[1]
     if(isFunction(tmp1)==False):
         return -1
-    if(isCatergory(tmp2)==False or len(tmp2)==0):
+    if(len(tmp2)=='SubstituteCategory' or isCatergory(tmp2)==False ):
         return -2
+    tmp3=s.split(')')[1]
+    if(len(tmp3)!=0 or '{'in s or'}' in s):
+        if(not(len(tmp3)!=0 and '{'in s and'}' in s)):
+            return -3
     return 1
 
 
