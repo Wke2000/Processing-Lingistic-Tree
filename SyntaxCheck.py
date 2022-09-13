@@ -1,7 +1,5 @@
 import string
-AlternateNodes_1='AN AN(AlternateNodes) {!!! Function error !!!}'
-AlternateNodes_2='AN AN(AlternateNodes) {!!! Catergory error !!!}'
-AlternateNodes_3='AN AN(AlternateNodes) {!!! Leaves error !!!}'
+
 ErrorDict=[]
 def isFunction(node_split:str)->bool:
     for i in node_split:
@@ -14,7 +12,7 @@ def isFunction(node_split:str)->bool:
 def isCatergory(node_split:str)->bool:
     ns=node_split
     tmp=ns.split('(')
-    if(len(tmp)!=2 or tmp[1][-1]!=')'):
+    if(len(tmp[1])==0 or tmp[1][-1]!=')'):
         return False
     for i in tmp[0]:
         if(str.isalnum(i)  ):
@@ -32,6 +30,7 @@ def isLeaves(node_split:str)->bool: #{}
     ns=node_split
     length=len(ns)
     punc = string.punctuation
+    punc=punc+'”“！？｡＂＃＄％＆＇（）＊＋，－／：；＜＝＞＠［＼］＾＿｀｛｜｝～｟｠｢｣､、〃》「」『』【】〔〕〖〗〘〙〚〛〜〝〞〟〰〾〿–—‘’‛“”„‟…‧﹏.'
     if(ns[0]!='{' or ns[length-1]!='}'):
         return False
     for i in range(1,length):
@@ -47,16 +46,15 @@ def isSyntax(node:str)->int:
     tmp=s.split()
     tmp1=tmp[0]
     tmp2=tmp[1]
-    if('{'in s):
+    if('{'in s ):
         tmp3='{'+s.split('{')[1]
         if (isLeaves(tmp3) == False):
             return -3
     if(isFunction(tmp1)==False):
         return -1
-    if(isCatergory(tmp2)==False):
+    if(isCatergory(tmp2)==False or len(tmp2)==0):
         return -2
     return 1
-
 
 
 
