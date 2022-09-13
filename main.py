@@ -90,6 +90,7 @@ def reStoreTree(Tree:TreeNode,line:str):
     f.writelines('\n')
     f.close()
 
+
 def finishTree(Tree:TreeNode):
     size=len(Tree)
     for i in range(size):
@@ -110,6 +111,12 @@ def finishTree(Tree:TreeNode):
                         Tree[j].kids = Tree[size - 1 - i]
                         Tree[j].kids.Next = L
                         break
+    for i in range(1,size):
+        if(Tree[i].tag==0):
+            L = Tree[0].kids
+            Tree[0].kids = Tree[i]
+            Tree[0].kids.Next = L
+
 
 
 def  main(address:str):
