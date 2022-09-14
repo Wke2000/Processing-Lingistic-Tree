@@ -90,7 +90,6 @@ def reStoreTree(Tree:TreeNode,line:str):
     f.writelines('\n')
     f.close()
 
-
 def finishTree(Tree:TreeNode):
     size=len(Tree)
     for i in range(size):
@@ -113,11 +112,15 @@ def finishTree(Tree:TreeNode):
                         break
     for i in range(1,size):
         if(Tree[i].tag==0):
-            L = Tree[0].kids
-            Tree[0].kids = Tree[i]
-            Tree[0].kids.Next = L
-
-
+            if(Tree[0].kids==None):
+                Tree[0].kids=Tree[i]
+                Tree[i].parents=Tree[0]
+            else:
+                L = Tree[0].kids
+                while(L.Next!=None):
+                    L=L.Next
+                L.Next=Tree[i]
+                Tree[i].parents=Tree[0]
 
 def  main(address:str):
     f = open(address)
@@ -202,5 +205,5 @@ def  main(address:str):
 
 
 if __name__ == '__main__':
-    FileAddress="C://Users//86153//Desktop//tree-cnn-202201.syn"
+    FileAddress="test.txt"
     main(FileAddress)
